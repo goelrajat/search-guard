@@ -18,6 +18,8 @@
 package com.floragunn.searchguard.http;
 
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +40,6 @@ public class HTTPBasicAuthenticator implements HTTPAuthenticator {
     protected final Logger log = LogManager.getLogger(this.getClass());
 
     public HTTPBasicAuthenticator(final Settings settings, final Path configPath) {
-    
     }
 
     @Override

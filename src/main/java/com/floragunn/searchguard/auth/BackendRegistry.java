@@ -45,6 +45,7 @@ import org.elasticsearch.transport.TransportRequest;
 
 import com.floragunn.searchguard.auditlog.AuditLog;
 import com.floragunn.searchguard.auth.internal.InternalAuthenticationBackend;
+import com.floragunn.searchguard.auth.internal.LdapAuthenticationBackend;
 import com.floragunn.searchguard.auth.internal.NoOpAuthenticationBackend;
 import com.floragunn.searchguard.auth.internal.NoOpAuthorizationBackend;
 import com.floragunn.searchguard.configuration.AdminDNs;
@@ -145,14 +146,14 @@ public class BackendRegistry implements ConfigurationChangeListener {
         authImplMap.put("noop_c", NoOpAuthenticationBackend.class.getName());
         authImplMap.put("noop_z", NoOpAuthorizationBackend.class.getName());
         
-        authImplMap.put("ldap_c", "com.floragunn.dlic.auth.ldap.backend.LDAPAuthenticationBackend");
+        authImplMap.put("ldap_c", "com.floragunn.searchguard.auth.internal.LDAPAuthenticationBackend");
         authImplMap.put("ldap_z", "com.floragunn.dlic.auth.ldap.backend.LDAPAuthorizationBackend");
         
         authImplMap.put("basic_h", HTTPBasicAuthenticator.class.getName());
         authImplMap.put("proxy_h", HTTPProxyAuthenticator.class.getName());
         authImplMap.put("clientcert_h", HTTPClientCertAuthenticator.class.getName());
-        authImplMap.put("kerberos_h", "com.floragunn.dlic.auth.http.kerberos.HTTPSpnegoAuthenticator");
-        authImplMap.put("jwt_h", "com.floragunn.dlic.auth.http.jwt.HTTPJwtAuthenticator");
+        authImplMap.put("kerberos_h", "com.floragunn.searchguard.http.HTTPSpnegoAuthenticator");
+        authImplMap.put("jwt_h", "com.floragunn.searchguard.http.HTTPJWTAuthenticator");
         authImplMap.put("openid_h", "com.floragunn.dlic.auth.http.jwt.keybyoidc.HTTPJwtKeyByOpenIdConnectAuthenticator");
         
         this.ttlInMin = settings.getAsInt(ConfigConstants.SEARCHGUARD_CACHE_TTL_MINUTES, 60);
@@ -226,6 +227,9 @@ public class BackendRegistry implements ConfigurationChangeListener {
                             || authBackendClazz.equals("intern")) {
                         authenticationBackend = iab;
                         ReflectionHelper.addLoadedModule(InternalAuthenticationBackend.class);
+                    } else if(authBackendClazz.equals("ldap")) {
+                            authenticationBackend = new LdapAuthenticationBackend(Settings.builder().put(esSettings).put(ads.getAsSettings("authentication_backend.config")).build(), configPath);
+                            ReflectionHelper.addLoadedModule(InternalAuthenticationBackend.class);
                     } else {
                         authenticationBackend = newInstance(
                                 authBackendClazz,"c",
@@ -280,6 +284,7 @@ public class BackendRegistry implements ConfigurationChangeListener {
         
         //loop over all transport auth domains
         for (final AuthDomain authDomain: transportAuthDomains) {
+            log.debug("Checking auth type " + authDomain.getBackend().getType());
 
             User authenticatedUser = null;
             
@@ -366,6 +371,8 @@ public class BackendRegistry implements ConfigurationChangeListener {
         
         //loop over all http/rest auth domains
         for (final AuthDomain authDomain: restAuthDomains) {
+            log.debug("Checking auth type " + authDomain.getBackend().getType());
+
             
             final HTTPAuthenticator httpAuthenticator = authDomain.getHttpAuthenticator();
             
@@ -413,7 +420,6 @@ public class BackendRegistry implements ConfigurationChangeListener {
             }
 
             //http completed
-            
             authenticatedUser = authcz(userCache, ac, authDomain, restAuthorizers);
      
             if(authenticatedUser == null) {
@@ -431,7 +437,7 @@ public class BackendRegistry implements ConfigurationChangeListener {
             }
             
             final String tenant = Utils.coalesce(request.header("sgtenant"), request.header("sg_tenant"));
-            
+
             if(log.isDebugEnabled()) {
                 log.debug("User '{}' is authenticated", authenticatedUser);
                 log.debug("sgtenant '{}'", tenant);

@@ -29,7 +29,7 @@ grant {
   permission java.util.PropertyPermission "sun.security.spnego.debug","write";
 
   //Enable when we switch to UnboundID LDAP SDK
-  //permission java.util.PropertyPermission "*", "read,write";
+  permission java.util.PropertyPermission "*", "read,write";
   //permission java.lang.RuntimePermission "setFactory";
   //permission javax.net.ssl.SSLPermission "setHostnameVerifier";
 
@@ -50,13 +50,27 @@ grant {
   permission java.util.PropertyPermission "com.sun.security.enableCRLDP", "write";
   
   permission java.net.NetPermission "getNetworkInformation";
-  permission java.net.SocketPermission "*", "connect,accept,resolve";
+  permission java.net.SocketPermission "*", "connect,accept,resolve,listen";
+  permission java.net.SocketPermission "*:*", "connect,accept,resolve,listen";
   
   permission java.security.SecurityPermission "putProviderProperty.BC";
   permission java.security.SecurityPermission "insertProvider.BC";
   
   permission java.lang.RuntimePermission "accessUserInformation";
+  permission java.io.FilePermission "/etc/ranger/elasticsearch/policycache/<appId>_<serviceName>.json","read,write";
+  permission java.io.FilePermission "/etc/ranger/elasticsearch/policycache/<appId>_<serviceName>.json","read,write";
+  permission java.io.FilePermission "/etc/ranger/elasticsearch/policycache","read,write";
+  permission javax.security.auth.AuthPermission "getSubject";
+  permission java.io.FilePermission "*", "execute";
   
+  permission javax.security.auth.AuthPermission "createLoginContext.";
+  permission javax.security.auth.AuthPermission "createLoginContext.other";
+  permission javax.security.auth.AuthPermission "modifyPrincipals";
+  permission java.io.FilePermission "/etc/security/keytabs/<keytab filepath>","read";
+  permission javax.security.auth.PrivateCredentialPermission "javax.security.auth.kerberos.KeyTab * \"*\"","read";
+  permission javax.security.auth.PrivateCredentialPermission "javax.security.auth.kerberos.KerberosTicket * \"*\"","read";
+  permission javax.security.auth.PrivateCredentialPermission "javax.security.auth.kerberos.KerberosKey * \"*\"","read";
+
   //Java 9+
   permission java.lang.RuntimePermission "accessClassInPackage.com.sun.jndi.ldap";
 

@@ -168,7 +168,7 @@ echo "Detected Search Guard Version: $SG_VERSION"
 
 if $SUDO_CMD grep --quiet -i searchguard $ES_CONF_FILE; then
   echo "$ES_CONF_FILE seems to be already configured for Search Guard. Quit."
-  exit -1
+  #exit -1
 fi
 
 set +e
@@ -407,7 +407,7 @@ fi
 
 echo "######## End Search Guard Demo Configuration ########" | $SUDO_CMD tee -a $ES_CONF_FILE > /dev/null 
 
-$SUDO_CMD chmod +x "$ES_PLUGINS_DIR/search-guard-6/tools/sgadmin.sh"
+#$SUDO_CMD chmod +x "$ES_PLUGINS_DIR/search-guard-6/tools/sgadmin.sh"
 
 ES_PLUGINS_DIR=`cd "$ES_PLUGINS_DIR" ; pwd`
 
@@ -415,7 +415,7 @@ echo "### Success"
 echo "### Execute this script now on all your nodes and then start all nodes"
 #Generate sgadmin_demo.sh
 echo "#!/bin/bash" | $SUDO_CMD tee sgadmin_demo.sh > /dev/null 
-echo $SUDO_CMD "$ES_PLUGINS_DIR/search-guard-6/tools/sgadmin.sh" -cd "$ES_PLUGINS_DIR/search-guard-6/sgconfig" -icl -key "$ES_CONF_DIR/kirk-key.pem" -cert "$ES_CONF_DIR/kirk.pem" -cacert "$ES_CONF_DIR/root-ca.pem" -nhnv | $SUDO_CMD tee -a sgadmin_demo.sh > /dev/null
+echo $SUDO_CMD "$ES_PLUGINS_DIR/search-guard-6/tools/sgadmin.sh" -h HOST -p 9300 -cd "$ES_PLUGINS_DIR/search-guard-6/sgconfig" -icl -key "$ES_CONF_DIR/kirk-key.pem" -cert "$ES_CONF_DIR/kirk.pem" -cacert "$ES_CONF_DIR/root-ca.pem" -nhnv | $SUDO_CMD tee -a sgadmin_demo.sh > /dev/null
 $SUDO_CMD chmod +x sgadmin_demo.sh
 
 if [ "$initsg" == 0 ]; then

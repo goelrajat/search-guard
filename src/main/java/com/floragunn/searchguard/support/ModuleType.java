@@ -39,7 +39,7 @@ public enum ModuleType implements Serializable {
 	DLSFLS("Document- and Field-Level Security", "com.floragunn.searchguard.configuration.SearchGuardFlsDlsIndexSearcherWrapper", Boolean.TRUE),
 	AUDITLOG("Audit Logging", "com.floragunn.searchguard.auditlog.impl.AuditLogImpl", Boolean.TRUE),
 	MULTITENANCY("Kibana Multitenancy", "com.floragunn.searchguard.configuration.PrivilegesInterceptorImpl", Boolean.TRUE),
-	LDAP_AUTHENTICATION_BACKEND("LDAP authentication backend", "com.floragunn.dlic.auth.ldap.backend.LDAPAuthenticationBackend", Boolean.TRUE),
+	LDAP_AUTHENTICATION_BACKEND("LDAP authentication backend", "com.floragunn.searchguard.auth.internal.LDAPAuthenticationBackend", Boolean.FALSE),
 	LDAP_AUTHORIZATION_BACKEND("LDAP authorization backend", "com.floragunn.dlic.auth.ldap.backend.LDAPAuthorizationBackend", Boolean.TRUE),
 	KERBEROS_AUTHENTICATION_BACKEND("Kerberos authorization backend", "com.floragunn.dlic.auth.http.kerberos.HTTPSpnegoAuthenticator", Boolean.TRUE),
 	JWT_AUTHENTICATION_BACKEND("JWT authorization backend", "com.floragunn.dlic.auth.http.jwt.HTTPJwtAuthenticator", Boolean.TRUE),

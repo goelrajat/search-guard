@@ -181,5 +181,20 @@ public class ConfigConstants {
     // Illegal Opcodes from here on
     public static final String SEARCHGUARD_UNSUPPORTED_RESTAPI_ACCEPT_INVALID_LICENSE = "searchguard.unsupported.restapi.accept_invalid_license";
     
-   
+    public static final String SEARCHGUARD_AUTH_LDAP_HOSTS = "searchguard.dynamic.authc.ldap.authentication_backend.config.hosts";
+    public static final String SEARCHGUARD_AUTH_LDAP_BIND_DN = "searchguard.dynamic.authc.ldap.authentication_backend.config.bind_dn";
+    public static final String SEARCHGUARD_AUTH_LDAP_PASSWD = "searchguard.dynamic.authc.ldap.authentication_backend.config.password";
+    public static final String SEARCHGUARD_AUTH_LDAP_USER_BASE = "searchguard.dynamic.authc.ldap.authentication_backend.config.userbase";
+    public static final String SEARCHGUARD_AUTH_LDAP_USER_SEARCH = "searchguard.dynamic.authc.ldap.authentication_backend.config.usersearch";
+    public static final String SEARCHGUARD_AUTH_LDAP_USER_GROUP_ATTR = "searchguard.dynamic.authc.ldap.authentication_backend.config.usergroup_attribute";
+    public static final String SEARCHGUARD_AUTH_LDAP_GROUP_BASE = "searchguard.dynamic.authc.ldap.authentication_backend.config.groupbase";
+    public static final String SEARCHGUARD_AUTH_LDAP_GROUP_SEARCH = "searchguard.dynamic.authc.ldap.authentication_backend.config.groupsearch";
+    public static final String SEARCHGUARD_AUTH_LDAP_GROUP_NAME_ATTR = "searchguard.dynamic.authc.ldap.authentication_backend.config.groupname_attribute";
+
+    public static final String SEARCHGUARD_AUTH_RANGER_SERVICE_TYPE = "searchguard.authz.ranger.serviceType";
+    public static final String SEARCHGUARD_AUTH_RANGER_APP_ID = "searchguard.authz.ranger.appId";
+    public static final String SEARCHGUARD_AUTH_RANGER_ENABLED = "searchguard.authz.ranger.enabled";
+    
+    public static final String SEARCHGUARD_AUTH_KRB_HTTP_CONFIG = "searchguard.dynamic.authc.kerberos_auth_domain.http_authenticator.config";
+
 }

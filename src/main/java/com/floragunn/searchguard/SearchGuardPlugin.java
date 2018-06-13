@@ -785,6 +785,10 @@ public final class SearchGuardPlugin extends SearchGuardSSLPlugin {
         settings.add(Setting.groupSetting(ConfigConstants.SEARCHGUARD_RESTAPI_ENDPOINTS_DISABLED + ".", Property.NodeScope));
         settings.add(Setting.boolSetting(ConfigConstants.SEARCHGUARD_UNSUPPORTED_RESTAPI_ACCEPT_INVALID_LICENSE, false, Property.NodeScope, Property.Filtered)); 
         
+        // Ranger settings
+        settings.add(Setting.simpleString(ConfigConstants.SEARCHGUARD_AUTH_RANGER_APP_ID, Property.NodeScope, Property.Filtered));
+        settings.add(Setting.simpleString(ConfigConstants.SEARCHGUARD_AUTH_RANGER_SERVICE_TYPE, Property.NodeScope, Property.Filtered));
+        settings.add(Setting.boolSetting(ConfigConstants.SEARCHGUARD_AUTH_RANGER_ENABLED, false, Property.NodeScope, Property.Filtered));
         return settings;
     }
     

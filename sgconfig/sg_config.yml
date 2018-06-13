@@ -81,32 +81,32 @@ searchguard:
         ###### and https://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Remote_IP_Valve
     authc:
       kerberos_auth_domain: 
-        http_enabled: false
+        http_enabled: true
         transport_enabled: false
-        order: 6
+        order: 3
         http_authenticator:
           type: kerberos # NOT FREE FOR COMMERCIAL USE
           challenge: true
           config:
             # If true a lot of kerberos/security related debugging output will be logged to standard out
-            krb_debug: false
+            #krb_debug: false
             # If true then the realm will be stripped from the user name
             strip_realm_from_principal: true
         authentication_backend:
           type: noop
       basic_internal_auth_domain: 
         http_enabled: true
-        transport_enabled: true
-        order: 4
+        transport_enabled: false
+        order: 1
         http_authenticator:
           type: basic
-          challenge: true
+          challenge: false
         authentication_backend:
           type: intern
       proxy_auth_domain:
         http_enabled: false
         transport_enabled: false
-        order: 3
+        order: 5
         http_authenticator:
           type: proxy
           challenge: false
@@ -123,17 +123,13 @@ searchguard:
           type: jwt
           challenge: false
           config:
-            signing_key: "base64 encoded HMAC key or public RSA/ECDSA pem key"
-            jwt_header: "Authorization"
-            jwt_url_parameter: null
-            roles_key: null
-            subject_key: null
+            signing_key: "MIICSzCCAbSgAwIBAgIIMjJbTiPEbVAwDQYJKoZIhvcNAQEFBQAwaDELMAkGA1UE\nBhMCVVMxDTALBgNVBAgTBFRlc3QxDTALBgNVBAcTBFRlc3QxDzANBgNVBAoTBkhh\nZG9vcDENMAsGA1UECxMEVGVzdDEbMBkGA1UEAxMScmFqYXQtMi5ndWF2dXMuY29t\nMB4XDTE4MDQxMDEwMDI0NloXDTE5MDQxMDEwMDI0NlowaDELMAkGA1UEBhMCVVMx\nDTALBgNVBAgTBFRlc3QxDTALBgNVBAcTBFRlc3QxDzANBgNVBAoTBkhhZG9vcDEN\nMAsGA1UECxMEVGVzdDEbMBkGA1UEAxMScmFqYXQtMi5ndWF2dXMuY29tMIGfMA0G\nCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFMvxDUmIgeoXf7ZFvJ5eHhwSwxbKxvCUw\nqqxhpkog6rf5g4roDCN90xjShcqVpAEDd7rOYKQGemgULgiIDCbwJDazFWZMASbr\nVwuPygEgHz3MgP4G4sQ/xzFbdiavxMk6nTeownWKlNVyAubN84xP8C7VGwK5g8qt\nAVgVCP3ilQIDAQABMA0GCSqGSIb3DQEBBQUAA4GBACxYxpDR+mqGrnlwWV7zcswk\nX9/73a+wYZ9iI4WO2I2z9v0udbd6CZU0QfXYaRGVkHWBRujf4qg3DHebTcXvd52p\niyL5j8I1s25pts+ZGrveI/3A4vSv6T57bQgBzC8Im/cQr+q2P3CJFa65uxIxyQJh\nETID+gC+gugOEMJYefu9"
         authentication_backend:
           type: noop
       clientcert_auth_domain:
         http_enabled: false
         transport_enabled: false
-        order: 2
+        order: 4
         http_authenticator:
           type: clientcert
           config:
@@ -142,9 +138,10 @@ searchguard:
         authentication_backend:
           type: noop
       ldap:
-        http_enabled: false
+        enabled: true
+        http_enabled: true
         transport_enabled: false
-        order: 5
+        order: 2
         http_authenticator:
           type: basic
           challenge: false
@@ -161,16 +158,19 @@ searchguard:
             # verify ldap hostname
             verify_hostnames: true
             hosts:
-              - localhost:8389
-            bind_dn: null
-            password: null
-            userbase: 'ou=people,dc=example,dc=com'
+              - ldap://192.168.154.190:389
+            bind_dn: 'cn=ldapadm,dc=example,dc=local'
+            password: 'admin'
+            userbase: 'uid={0},ou=People,dc=example,dc=local'
             # Filter to search for users (currently in the whole subtree beneath userbase)
             # {0} is substituted with the username 
-            usersearch: '(sAMAccountName={0})'
+            usersearch: '(objectClass=account)'
             # Use this attribute from the user as username (if not set then DN is used)
-            username_attribute: null
-    authz:    
+            usergroup_attribute: 'gidNumber'
+            groupbase: 'ou=Group,dc=example,dc=local'
+            groupsearch: '(&(objectClass=posixGroup)(gidNumber={1}))'
+            groupname_attribute: 'cn'
+    authz:
       roles_from_myldap:
         http_enabled: false
         transport_enabled: false
